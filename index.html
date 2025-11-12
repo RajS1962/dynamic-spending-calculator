@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Spending Rule Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 1200px;
+            width: 100%;
+            padding: 30px;
+        }
+
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 0.95em;
+        }
+
+        .input-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+
+        input[type="number"] {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        button {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #48bb78;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #38a169;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: #f56565;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #e53e3e;
+            transform: translateY(-2px);
+        }
+
+        .results-container {
+            margin-top: 25px;
+            display: none;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: right;
+        }
+
+        th:first-child, td:first-child {
+            text-align: center;
+        }
+
+        tbody tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        tbody tr:hover {
+            background: #e9ecef;
+        }
+
+        .highlight {
+            background: #ffd700 !important;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+
+            .input-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            th, td {
+                padding: 8px;
+                font-size: 0.85em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.2em;
+            }
+
+            .subtitle {
+                font-size: 0.85em;
+            }
+
+            th, td {
+                padding: 6px;
+                font-size: 0.75em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Dynamic Spending Rule Calculator</h1>
+        <p class="subtitle">Calculate your retirement withdrawal amounts with dynamic ceiling and floor constraints</p>
+
+        <div class="input-section">
+            <h3>Initial Parameters</h3>
+            <div class="input-grid">
+                <div class="input-group">
+                    <label for="initialPortfolio">Initial Portfolio Value ($)</label>
+                    <input type="number" id="initialPortfolio" value="100000" min="0" step="1000">
+                </div>
+                <div class="input-group">
+                    <label for="withdrawalRate">Withdrawal Rate (%)</label>
+                    <input type="number" id="withdrawalRate" value="4" min="0" max="100" step="0.1">
+                </div>
+                <div class="input-group">
+                    <label for="ceilingIncrease">Ceiling Increase (%)</label>
+                    <input type="number" id="ceilingIncrease" value="5" min="0" max="100" step="0.1">
+                </div>
+                <div class="input-group">
+                    <label for="floorDecrease">Floor Decrease (%)</label>
+                    <input type="number" id="floorDecrease" value="2.5" min="0" max="100" step="0.1">
+                </div>
+                <div class="input-group">
+                    <label for="startYear">Starting Year</label>
+                    <input type="number" id="startYear" value="2026" min="2000" max="2100">
+                </div>
+                <div class="input-group">
+                    <label for="numberOfYears">Number of Years</label>
+                    <input type="number" id="numberOfYears" value="30" min="1" max="100">
+                </div>
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-primary" onclick="generateTable()">Generate Calculation Table</button>
+            <button class="btn-secondary" onclick="exportToCSV()">Export to CSV</button>
+            <button class="btn-danger" onclick="resetCalculator()">Reset</button>
+        </div>
+
+        <div class="results-container" id="resultsContainer">
+            <h3>Yearly Withdrawal Calculations</h3>
+            <div class="table-wrapper">
+                <table id="resultsTable">
+                    <thead>
+                        <tr>
+                            <th>Year</th>
+                            <th>Portfolio Value ($)</th>
+                            <th>Inflation Rate (%)</th>
+                            <th>Calculated Withdrawal ($)</th>
+                            <th>Ceiling ($)</th>
+                            <th>Floor ($)</th>
+                            <th>Final Withdrawal ($)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resultsBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let calculationData = [];
+
+        function generateTable() {
+            const initialPortfolio = parseFloat(document.getElementById('initialPortfolio').value);
+            const withdrawalRate = parseFloat(document.getElementById('withdrawalRate').value);
+            const ceilingIncrease = parseFloat(document.getElementById('ceilingIncrease').value);
+            const floorDecrease = parseFloat(document.getElementById('floorDecrease').value);
+            const startYear = parseInt(document.getElementById('startYear').value);
+            const numberOfYears = parseInt(document.getElementById('numberOfYears').value);
+
+            calculationData = [];
+            const tbody = document.getElementById('resultsBody');
+            tbody.innerHTML = '';
+
+            let previousWithdrawal = null;
+
+            for (let i = 0; i < numberOfYears; i++) {
+                const year = startYear + i;
+                const portfolioValue = i === 0 ? initialPortfolio : initialPortfolio * (1 - 0.05 * i);
+                const inflationRate = 3.0;
+
+                const calculatedWithdrawal = portfolioValue * (withdrawalRate / 100);
+                
+                let ceiling, floor, finalWithdrawal;
+                
+                if (i === 0) {
+                    ceiling = calculatedWithdrawal;
+                    floor = calculatedWithdrawal;
+                    finalWithdrawal = calculatedWithdrawal;
+                } else {
+                    ceiling = previousWithdrawal * (1 + ceilingIncrease / 100);
+                    floor = previousWithdrawal * (1 - floorDecrease / 100);
+                    finalWithdrawal = Math.min(calculatedWithdrawal, ceiling);
+                    finalWithdrawal = Math.max(finalWithdrawal, floor);
+                }
+
+                previousWithdrawal = finalWithdrawal;
+
+                calculationData.push({
+                    year,
+                    portfolioValue,
+                    inflationRate,
+                    calculatedWithdrawal,
+                    ceiling,
+                    floor,
+                    finalWithdrawal
+                });
+
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>${year}</td>
+                    <td>$${portfolioValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                    <td><input type="number" class="inflation-input" value="${inflationRate.toFixed(1)}" step="0.1" style="width: 80px; padding: 5px;" onchange="recalculate(${i})"></td>
+                    <td>$${calculatedWithdrawal.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                    <td>$${ceiling.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                    <td>$${floor.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                    <td class="highlight">$${finalWithdrawal.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                `;
+            }
+
+            document.getElementById('resultsContainer').style.display = 'block';
+        }
+
+        function recalculate(index) {
+            console.log('Recalculating from row ' + index);
+        }
+
+        function exportToCSV() {
+            if (calculationData.length === 0) {
+                alert('Please generate the table first!');
+                return;
+            }
+
+            let csv = 'Year,Portfolio Value,Inflation Rate,Calculated Withdrawal,Ceiling,Floor,Final Withdrawal\n';
+            
+            calculationData.forEach(row => {
+                csv += `${row.year},${row.portfolioValue.toFixed(2)},${row.inflationRate.toFixed(1)},${row.calculatedWithdrawal.toFixed(2)},${row.ceiling.toFixed(2)},${row.floor.toFixed(2)},${row.finalWithdrawal.toFixed(2)}\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'dynamic-spending-calculator.csv';
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        function resetCalculator() {
+            document.getElementById('initialPortfolio').value = 100000;
+            document.getElementById('withdrawalRate').value = 4;
+            document.getElementById('ceilingIncrease').value = 5;
+            document.getElementById('floorDecrease').value = 2.5;
+            document.getElementById('startYear').value = 2026;
+            document.getElementById('numberOfYears').value = 30;
+            document.getElementById('resultsContainer').style.display = 'none';
+            calculationData = [];
+        }
+    </script>
+</body>
+</html>
