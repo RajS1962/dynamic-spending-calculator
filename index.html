@@ -287,7 +287,16 @@
     </div>
 
     <script>
-        let calculationData = [];
+        // Load data from localStorage
+        let calculationData = JSON.parse(localStorage.getItem('dynamicSpendingData')) || [];
+        let historicalRecords = JSON.parse(localStorage.getItem('dynamicSpendingHistory')) || [];
+
+        // Load data on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            if (calculationData.length > 0) {
+                displayStoredData();
+            }
+        });
 
         function generateTable() {
             const initialPortfolio = parseFloat(document.getElementById('initialPortfolio').value);
@@ -297,17 +306,37 @@
             const startYear = parseInt(document.getElementById('startYear').value);
             const numberOfYears = parseInt(document.getElementById('numberOfYears').value);
 
+            // Save previous records before clearing
+            if (calculationData.length > 0) {
+                const recordDate = new Date().toISOString();
+                historicalRecords.push({
+                    date: recordDate,
+                    data: JSON.parse(JSON.stringify(calculationData))
+                });
+                localStorage.setItem('dynamicSpendingHistory', JSON.stringify(historicalRecords));
+            }
+
+            // Check for pre-set inflation rates saved per year
+            let inflationRates = [];
+            if (calculationData.length === numberOfYears) {
+                inflationRates = calculationData.map(row => row.inflationRate);
+            } else {
+                inflationRates = Array(numberOfYears).fill(3.0); // Default inflation is 3.0%
+            }
+
             calculationData = [];
             const tbody = document.getElementById('resultsBody');
             tbody.innerHTML = '';
 
             let previousWithdrawal = null;
+            let portfolioValue = initialPortfolio;
 
             for (let i = 0; i < numberOfYears; i++) {
                 const year = startYear + i;
-                const portfolioValue = i === 0 ? initialPortfolio : initialPortfolio * (1 - 0.05 * i);
-                const inflationRate = 3.0;
-
+                
+                // Use inflation from previous records if available, otherwise 3.0
+                const inflationRate = inflationRates[i] !== undefined ? inflationRates[i] : 3.0;
+                
                 const calculatedWithdrawal = portfolioValue * (withdrawalRate / 100);
                 
                 let ceiling, floor, finalWithdrawal;
@@ -322,9 +351,10 @@
                     finalWithdrawal = Math.min(calculatedWithdrawal, ceiling);
                     finalWithdrawal = Math.max(finalWithdrawal, floor);
                 }
-
+                
                 previousWithdrawal = finalWithdrawal;
-
+                
+                // Save each year's data in calculationData
                 calculationData.push({
                     year,
                     portfolioValue,
@@ -334,26 +364,61 @@
                     floor,
                     finalWithdrawal
                 });
-
+                
                 const row = tbody.insertRow();
+                
+                // Each inflation cell is editable, updates for that year only
                 const rowHtml = `
                     <td>${year}</td>
-                    <td>£${portfolioValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
-                    <td><input type="number" class="inflation-input" value="${inflationRate.toFixed(1)}" step="0.1" style="width: 80px; padding: 5px;" onchange="recalculate(${i})"></td>
-                    <td>£${calculatedWithdrawal.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
-                    <td>£${ceiling.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
-                    <td>£${floor.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
-                    <td class="highlight">£${finalWithdrawal.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                    <td>£${portfolioValue.toFixed(2).replace(/\\B(?=(\\d{3})+(?!\\d))/g, ",")}</td>
+                    <td><input type="number" class="inflation-input" value="${inflationRate.toFixed(1)}" step="0.1" style="width: 80px; padding: 5px;" 
+                         onchange="updateInflation(${i}, this.value)">
+                    </td>
+                    <td>£${calculatedWithdrawal.toFixed(2).replace(/\\B(?=(\\d{3})+(?!\\d))/g, ",")}</td>
+                    <td>£${ceiling.toFixed(2).replace(/\\B(?=(\\d{3})+(?!\\d))/g, ",")}</td>
+                    <td>£${floor.toFixed(2).replace(/\\B(?=(\\d{3})+(?!\\d))/g, ",")}</td>
+                    <td class="highlight">£${finalWithdrawal.toFixed(2).replace(/\\B(?=(\\d{3})+(?!\\d))/g, ",")}</td>
                 `;
-                // Insert into row:
                 row.innerHTML = rowHtml;
+                
+                // Apply inflation to reduce portfolio value for next year
+                portfolioValue = portfolioValue * (1 - (inflationRate / 100));
             }
-
+            
+            // Save to localStorage
+            localStorage.setItem('dynamicSpendingData', JSON.stringify(calculationData));
+            
             document.getElementById('resultsContainer').style.display = 'block';
         }
 
-        function recalculate(index) {
-            console.log('Recalculating from row ' + index);
+        // Called every time a user changes a single year's inflation value
+        function updateInflation(index, value) {
+            calculationData[index].inflationRate = parseFloat(value);
+            localStorage.setItem('dynamicSpendingData', JSON.stringify(calculationData));
+            generateTable(); // Recompute everything with updated inflation rates
+        }
+
+        function displayStoredData() {
+            const tbody = document.getElementById('resultsBody');
+            tbody.innerHTML = '';
+            
+            calculationData.forEach((row, i) => {
+                const tableRow = tbody.insertRow();
+                const rowHtml = `
+                    <td>${row.year}</td>
+                    <td>£${row.portfolioValue.toFixed(2).replace(/\\B(?=(\\d{3})+(?!\\d))/g, ",")}</td>
+                    <td><input type="number" class="inflation-input" value="${row.inflationRate.toFixed(1)}" step="0.1" style="width: 80px; padding: 5px;" 
+                         onchange="updateInflation(${i}, this.value)">
+                    </td>
+                    <td>£${row.calculatedWithdrawal.toFixed(2).replace(/\\B(?=(\\d{3})+(?!\\d))/g, ",")}</td>
+                    <td>£${row.ceiling.toFixed(2).replace(/\\B(?=(\\d{3})+(?!\\d))/g, ",")}</td>
+                    <td>£${row.floor.toFixed(2).replace(/\\B(?=(\\d{3})+(?!\\d))/g, ",")}</td>
+                    <td class="highlight">£${row.finalWithdrawal.toFixed(2).replace(/\\B(?=(\\d{3})+(?!\\d))/g, ",")}</td>
+                `;
+                tableRow.innerHTML = rowHtml;
+            });
+            
+            document.getElementById('resultsContainer').style.display = 'block';
         }
 
         function exportToCSV() {
@@ -361,13 +426,13 @@
                 alert('Please generate the table first!');
                 return;
             }
-
-            let csv = 'Year,Portfolio Value,Inflation Rate,Calculated Withdrawal,Ceiling,Floor,Final Withdrawal\n';
+            
+            let csv = 'Year,Portfolio Value,Inflation Rate,Calculated Withdrawal,Ceiling,Floor,Final Withdrawal\\n';
             
             calculationData.forEach(row => {
-                csv += `${row.year},${row.portfolioValue.toFixed(2)},${row.inflationRate.toFixed(1)},${row.calculatedWithdrawal.toFixed(2)},${row.ceiling.toFixed(2)},${row.floor.toFixed(2)},${row.finalWithdrawal.toFixed(2)}\n`;
+                csv += `${row.year},${row.portfolioValue.toFixed(2)},${row.inflationRate.toFixed(1)},${row.calculatedWithdrawal.toFixed(2)},${row.ceiling.toFixed(2)},${row.floor.toFixed(2)},${row.finalWithdrawal.toFixed(2)}\\n`;
             });
-
+            
             const blob = new Blob([csv], { type: 'text/csv' });
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -386,7 +451,8 @@
             document.getElementById('numberOfYears').value = 30;
             document.getElementById('resultsContainer').style.display = 'none';
             calculationData = [];
+            localStorage.removeItem('dynamicSpendingData');
         }
-    </script>
+        </script>
 </body>
 </html>
