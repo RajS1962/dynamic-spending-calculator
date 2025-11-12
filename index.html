@@ -336,7 +336,7 @@
                 });
 
                 const row = tbody.insertRow();
-                343 = `
+                const rowHtml = `
                     <td>${year}</td>
                     <td>£${portfolioValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
                     <td><input type="number" class="inflation-input" value="${inflationRate.toFixed(1)}" step="0.1" style="width: 80px; padding: 5px;" onchange="recalculate(${i})"></td>
