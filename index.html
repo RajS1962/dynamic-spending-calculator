@@ -360,13 +360,13 @@
                 const year = startYear + i;
                 
             // Check for year-specific overrides
-            if (yearOverrides[i+1]?.portfolio !== undefined) {
-                portfolioValue = yearOverrides[i+1].portfolio;
+            if (yearOverrides[year]?.portfolio !== undefined) {
+                portfolioValue = yearOverrides[year].portfolio;
             }
                 
                 // Use inflation from previous records if available, otherwise 3.0
-            const inflationRate = yearOverrides[i+1]?.inflation !== undefined
-                ? yearOverrides[i+1].inflation
+            const inflationRate = yearOverrides[year]?.inflation !== undefined
+                ? yearOverrides[year].inflation
                 : (inflationRates[i] !== undefined ? inflationRates[i] : 3.0);                const calculatedWithdrawal = portfolioValue * (withdrawalRate / 100);
                 
                 let ceiling, floor, finalWithdrawal;
