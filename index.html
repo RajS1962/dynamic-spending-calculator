@@ -255,6 +255,23 @@
                     <label for="numberOfYears">Number of Years</label>
                     <input type="number" id="numberOfYears" value="30" min="1" max="100">
                 </div>
+                
+            <!-- Year-Specific Overrides Section -->
+            <div class="year-overrides-section" style="margin-top: 20px;">
+                <h3 style="margin-bottom: 10px; cursor: pointer;" onclick="toggleYearOverrides()">▼ Year-Specific Values (Optional)</h3>
+                <div id="yearOverridesContent" style="display: block;">
+                    <div style="margin-bottom: 15px;">
+                        <label>Set specific values for individual years:</label>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 10px; margin-top: 10px;">
+                            <input type="number" id="overrideYear" placeholder="Year #" min="1" step="1" style="padding: 8px;">
+                            <input type="number" id="overrideInflation" placeholder="Inflation %" step="0.1" style="padding: 8px;">
+                            <input type="number" id="overridePortfolio" placeholder="Portfolio £" step="1000" style="padding: 8px;">
+                            <button type="button" onclick="addYearOverride()" style="padding: 8px 15px; background: #0969da; color: white; border: none; border-radius: 6px; cursor: pointer;">Add Override</button>
+                        </div>
+                    </div>
+                    <div id="overridesList" style="margin-top: 10px;"></div>
+                </div>
+            </div>
             </div>
         </div>
 
@@ -290,10 +307,12 @@
         // Load data from localStorage
         let calculationData = JSON.parse(localStorage.getItem('dynamicSpendingData')) || [];
         let historicalRecords = JSON.parse(localStorage.getItem('dynamicSpendingHistory')) || [];
+                let yearOverrides = JSON.parse(localStorage.getItem('dynamicSpendingOverrides')) || {};
 
         // Load data on page load
         window.addEventListener('DOMContentLoaded', function() {
             if (calculationData.length > 0) {
+                
                 displayStoredData();
             }
         });
@@ -405,6 +424,65 @@
             generateTable(); // Recompute everything with updated portfolio values
         }
 
+                // Toggle year overrides section visibility
+        function toggleYearOverrides() {
+            const content = document.getElementById('yearOverridesContent');
+            content.style.display = content.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Add year-specific override
+        function addYearOverride() {
+            const yearNum = parseInt(document.getElementById('overrideYear').value);
+            const inflation = parseFloat(document.getElementById('overrideInflation').value);
+            const portfolio = parseFloat(document.getElementById('overridePortfolio').value);
+            
+            if (!yearNum || yearNum < 1) {
+                alert('Please enter a valid year number');
+                return;
+            }
+            
+            yearOverrides[yearNum] = {};
+            if (!isNaN(inflation)) yearOverrides[yearNum].inflation = inflation;
+            if (!isNaN(portfolio)) yearOverrides[yearNum].portfolio = portfolio;
+            
+            localStorage.setItem('dynamicSpendingOverrides', JSON.stringify(yearOverrides));
+            displayYearOverrides();
+            
+            // Clear inputs
+            document.getElementById('overrideYear').value = '';
+            document.getElementById('overrideInflation').value = '';
+            document.getElementById('overridePortfolio').value = '';
+        }
+
+        // Display year overrides list
+        function displayYearOverrides() {
+            const listDiv = document.getElementById('overridesList');
+            if (Object.keys(yearOverrides).length === 0) {
+                listDiv.innerHTML = '';
+                return;
+            }
+            
+            let html = '<div style="margin-top: 10px;"><strong>Active Overrides:</strong></div>';
+            for (const [year, values] of Object.entries(yearOverrides).sort((a, b) => a[0] - b[0])) {
+                html += `<div style="background: #f6f8fa; padding: 8px; margin: 5px 0; border-radius: 6px; display: flex; justify-content: space-between; align-items: center;">`;
+                html += `<span>Year ${year}: `;
+                if (values.inflation !== undefined) html += `Inflation ${values.inflation}%`;
+                if (values.inflation !== undefined && values.portfolio !== undefined) html += ', ';
+                if (values.portfolio !== undefined) html += `Portfolio £${values.portfolio.toLocaleString()}`;
+                html += `</span>`;
+                html += `<button onclick="deleteYearOverride(${year})" style="padding: 4px 8px; background: #d73a49; color: white; border: none; border-radius: 4px; cursor: pointer;">Delete</button>`;
+                html += `</div>`;
+            }
+            listDiv.innerHTML = html;
+        }
+
+        // Delete year override
+        function deleteYearOverride(year) {
+            delete yearOverrides[year];
+            localStorage.setItem('dynamicSpendingOverrides', JSON.stringify(yearOverrides));
+            displayYearOverrides();
+        }
+
         function displayStoredData() {
             const tbody = document.getElementById('resultsBody');
             tbody.innerHTML = '';
@@ -460,6 +538,9 @@
             calculationData = [];
             localStorage.removeItem('dynamicSpendingData');
         }
+        
+        // Load and display year overrides on page load
+        displayYearOverrides();
         </script>
 </body>
 </html>
