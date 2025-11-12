@@ -353,8 +353,15 @@
             for (let i = 0; i < numberOfYears; i++) {
                 const year = startYear + i;
                 
+            // Check for year-specific overrides
+            if (yearOverrides[i+1]?.portfolio !== undefined) {
+                portfolioValue = yearOverrides[i+1].portfolio;
+            }
+                
                 // Use inflation from previous records if available, otherwise 3.0
-                const inflationRate = inflationRates[i] !== undefined ? inflationRates[i] : 3.0;
+const inflationRate = yearOverrides[i+1]?.inflation !== undefined 
+                ? yearOverrides[i+1].inflation 
+                : (inflationRates[i] !== undefined ? inflationRates[i] : 3.0);[i] : 3.0;
                 
                 const calculatedWithdrawal = portfolioValue * (withdrawalRate / 100);
                 
