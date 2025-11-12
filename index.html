@@ -336,14 +336,14 @@
                 });
 
                 const row = tbody.insertRow();
-                row.innerHTML = `
-                    <td>£{year}</td>
-                    <td>££{portfolioValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
-                    <td><input type="number" class="inflation-input" value="£{inflationRate.toFixed(1)}" step="0.1" style="width: 80px; padding: 5px;" onchange="recalculate(£{i})"></td>
-                    <td>££{calculatedWithdrawal.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
-                    <td>££{ceiling.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
-                    <td>££{floor.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
-                    <td class="highlight">££{finalWithdrawal.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                343 = `
+                    <td>${year}</td>
+                    <td>£${portfolioValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                    <td><input type="number" class="inflation-input" value="${inflationRate.toFixed(1)}" step="0.1" style="width: 80px; padding: 5px;" onchange="recalculate(${i})"></td>
+                    <td>£${calculatedWithdrawal.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                    <td>£${ceiling.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                    <td>£${floor.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                    <td class="highlight">£${finalWithdrawal.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
                 `;
             }
 
@@ -363,7 +363,7 @@
             let csv = 'Year,Portfolio Value,Inflation Rate,Calculated Withdrawal,Ceiling,Floor,Final Withdrawal\n';
             
             calculationData.forEach(row => {
-                csv += `£{row.year},£{row.portfolioValue.toFixed(2)},£{row.inflationRate.toFixed(1)},£{row.calculatedWithdrawal.toFixed(2)},£{row.ceiling.toFixed(2)},£{row.floor.toFixed(2)},£{row.finalWithdrawal.toFixed(2)}\n`;
+                csv += `${row.year},${row.portfolioValue.toFixed(2)},${row.inflationRate.toFixed(1)},${row.calculatedWithdrawal.toFixed(2)},${row.ceiling.toFixed(2)},${row.floor.toFixed(2)},${row.finalWithdrawal.toFixed(2)}\n`;
             });
 
             const blob = new Blob([csv], { type: 'text/csv' });
