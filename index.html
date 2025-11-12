@@ -359,11 +359,9 @@
             }
                 
                 // Use inflation from previous records if available, otherwise 3.0
-const inflationRate = yearOverrides[i+1]?.inflation !== undefined 
-                ? yearOverrides[i+1].inflation 
-                : (inflationRates[i] !== undefined ? inflationRates[i] : 3.0);[i] : 3.0;
-                
-                const calculatedWithdrawal = portfolioValue * (withdrawalRate / 100);
+            const inflationRate = yearOverrides[i+1]?.inflation !== undefined
+                ? yearOverrides[i+1].inflation
+                : (inflationRates[i] !== undefined ? inflationRates[i] : 3.0);                const calculatedWithdrawal = portfolioValue * (withdrawalRate / 100);
                 
                 let ceiling, floor, finalWithdrawal;
                 
