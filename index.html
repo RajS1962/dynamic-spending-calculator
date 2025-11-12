@@ -232,7 +232,7 @@
             <h3>Initial Parameters</h3>
             <div class="input-grid">
                 <div class="input-group">
-                    <label for="initialPortfolio">Initial Portfolio Value ($)</label>
+                    <label for="initialPortfolio">Initial Portfolio Value (£)</label>
                     <input type="number" id="initialPortfolio" value="100000" min="0" step="1000">
                 </div>
                 <div class="input-group">
@@ -271,12 +271,12 @@
                     <thead>
                         <tr>
                             <th>Year</th>
-                            <th>Portfolio Value ($)</th>
+                            <th>Portfolio Value (£)</th>
                             <th>Inflation Rate (%)</th>
-                            <th>Calculated Withdrawal ($)</th>
-                            <th>Ceiling ($)</th>
-                            <th>Floor ($)</th>
-                            <th>Final Withdrawal ($)</th>
+                            <th>Calculated Withdrawal (£)</th>
+                            <th>Ceiling (£)</th>
+                            <th>Floor (£)</th>
+                            <th>Final Withdrawal (£)</th>
                         </tr>
                     </thead>
                     <tbody id="resultsBody">
@@ -337,13 +337,13 @@
 
                 const row = tbody.insertRow();
                 row.innerHTML = `
-                    <td>${year}</td>
-                    <td>$${portfolioValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
-                    <td><input type="number" class="inflation-input" value="${inflationRate.toFixed(1)}" step="0.1" style="width: 80px; padding: 5px;" onchange="recalculate(${i})"></td>
-                    <td>$${calculatedWithdrawal.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
-                    <td>$${ceiling.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
-                    <td>$${floor.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
-                    <td class="highlight">$${finalWithdrawal.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                    <td>£{year}</td>
+                    <td>££{portfolioValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                    <td><input type="number" class="inflation-input" value="£{inflationRate.toFixed(1)}" step="0.1" style="width: 80px; padding: 5px;" onchange="recalculate(£{i})"></td>
+                    <td>££{calculatedWithdrawal.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                    <td>££{ceiling.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                    <td>££{floor.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                    <td class="highlight">££{finalWithdrawal.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
                 `;
             }
 
@@ -363,7 +363,7 @@
             let csv = 'Year,Portfolio Value,Inflation Rate,Calculated Withdrawal,Ceiling,Floor,Final Withdrawal\n';
             
             calculationData.forEach(row => {
-                csv += `${row.year},${row.portfolioValue.toFixed(2)},${row.inflationRate.toFixed(1)},${row.calculatedWithdrawal.toFixed(2)},${row.ceiling.toFixed(2)},${row.floor.toFixed(2)},${row.finalWithdrawal.toFixed(2)}\n`;
+                csv += `£{row.year},£{row.portfolioValue.toFixed(2)},£{row.inflationRate.toFixed(1)},£{row.calculatedWithdrawal.toFixed(2)},£{row.ceiling.toFixed(2)},£{row.floor.toFixed(2)},£{row.finalWithdrawal.toFixed(2)}\n`;
             });
 
             const blob = new Blob([csv], { type: 'text/csv' });
