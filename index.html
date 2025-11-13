@@ -261,16 +261,16 @@
                 <div id="yearOverridesContent" style="display: block;">
                     <div style="margin-bottom: 15px;">
                         <label>Set specific values for individual years:</label>
-                                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 10argin-bottom: 5px;">
+                            <div class="input-grid">
                                                                 <label style="font-weight: bold; font-size: 0.9em">Year #</label>
                                                                 <label style="font-weight: bold; font-size: 0.9em">Inflation %</label>
                                                                 <label style="font-weight: bold; font-size: 0.9em">Portfolio £</label>
                                                             
                                                             </div>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 10px; margin-top: 10px;">
-                            <input type="number" id="overrideYear" placeholder="0" min="1" step="1" style="padding: 8px;">width: 100px; padding: 8px;">
-                            <input type="number" id="overrideInflation" placeholder="0" step="0.1" style="padding: 8px;width: 100px; padding: 8px;">
-                            <input type="number" id="overridePortfolio" placeholder="0" step="1000" style="padding: 8px;"width: 120px; padding: 8px;">
+                        <div class="input-grid">
+                                                <input type="number" id="overrideYear" placeholder="0" min="1" step="1">
+                                                <input type="number" id="overrideInflation" placeholder="0" step="0.1">
+                                                <input type="number" id="overridePortfolio" placeholder="0" step="1000">
                             <button type="button" onclick="addYearOverride()" style="padding: 8px 15px; background: #0969da; color: white; border: none; border-radius: 6px; cursor: pointer;">Add Values</button>
                         </div>
                     </div>
