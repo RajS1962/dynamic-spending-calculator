@@ -267,16 +267,8 @@ width: 15%;
                     <input type="number" id="floorDecrease" value="2.5" min="0" max="100" step="0.1">
                 </div>
                                                         </div>
-                            </div>
+                            
 
-                                    <!-- Portfolio Value and Withdrawal Chart -->
-                                    <div id="chartContainer" style="width: 100%; margin-top: 20px;">
-                                                                <canvas id="portfolioChart"></canvas>
-                                                            </div>
-                
-            <!-- Year-Specific Overrides Section -->
-            <div class="year-overrides-section" style="margin-top: 20px;">
-                <h3 style="margin-bottom: 10px; cursor: pointer;" onclick="toggleYearOverrides()">▼  Values (Optional)</h3>
                 <div id="yearOverridesContent" style="display: block;">
                     <div style="margin-bottom: 15px;">
                         <label>Set specific values for individual years:</label>
@@ -306,6 +298,12 @@ width: 15%;
             <button class="btn-secondary" onclick="exportToCSV()">Export to CSV</button>
             <button class="btn-danger" onclick="resetCalculator()">Reset</button>
         </div>
+
+                                        <!-- Portfolio Value and Withdrawal Chart -->
+                                    <div id="chartContainer" style="width: 100%; margin-top: 20px;">
+                                                                <canvas id="portfolioChart"></canvas>
+                                                            </div>
+
 
         <div class="results-container" id="resultsContainer">
             <h3>Yearly Withdrawal Calculations</h3>
