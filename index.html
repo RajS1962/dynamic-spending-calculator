@@ -22,7 +22,7 @@
         }
 
 
-                h3 {
+        h3 {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             padding: 12px 20px;
@@ -31,6 +31,7 @@
             box-shadow: 0 4px 6px rgba(102, 126, 234, 0.3);
             font-size: 1.2em;
         }
+        
         .container {
             background: white;
             border-radius: 15px;
@@ -54,40 +55,49 @@
             font-size: 0.95em;
         }
 
-        .input-section {
-            background: linear-gradient(135deg, #fef3c7 0%, #fce7f3 50%, #dbeafe 100%);            padding: 20px;
+        /* Top section containing inputs and chart */
+        .top-section {
+            background: #f8f9fa;
+            padding: 20px;
             border-radius: 10px;
             margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .input-section {
+            background: linear-gradient(135deg, #fef3c7 0%, #fce7f3 50%, #dbeafe 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
         }
 
         .input-grid {
             display: grid;
-                    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));           margin-top: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
         }
 
-                /* Width control for specific input fields */
-#initialPortfolio,
-#withdrawalRate,
-#ceilingIncrease,
-#floorDecrease,
-#startYear,
-#numberOfYears {
-width: 15%;
-}        .input-group {
+        /* Removed hardcoded width for better grid responsiveness */
+        /* Previously had: width: 15% on specific input IDs */
+
+        .input-group {
             display: flex;
             flex-direction: column;
         }
 
         label {
             font-weight: 600;
-            color: #6366f1;            margin-bottom: 5px;
+            color: #6366f1;
+            margin-bottom: 5px;
             font-size: 0.9em;
         }
 
         input[type="number"] {
             padding: 10px;
-                        max-width: 100%;
-            border: 2px solid #a78bfa;            border-radius: 5px;
+            max-width: 100%;
+            border: 2px solid #a78bfa;
+            border-radius: 5px;
             font-size: 1em;
             transition: border-color 0.3s;
         }
@@ -116,24 +126,29 @@ width: 15%;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);            color: white;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
         }
 
         .btn-primary:hover {
-            background: linear-gradient(135deg, #5568d3 0%, #6a3d8f 100%);            transform: translateY(-2px);
+            background: linear-gradient(135deg, #5568d3 0%, #6a3d8f 100%);
+            transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
 
         .btn-secondary {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);            color: white;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
         }
 
         .btn-secondary:hover {
-            background: linear-gradient(135deg, #059669 0%, #047857 100%);            transform: translateY(-2px);
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            transform: translateY(-2px);
         }
 
         .btn-danger {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);            color: white;
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
         }
 
         .btn-danger:hover {
@@ -141,8 +156,16 @@ width: 15%;
             transform: translateY(-2px);
         }
 
-        .results-container {
+        /* Bottom section containing results */
+        .bottom-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
             margin-top: 25px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .results-container {
             display: none;
         }
 
@@ -183,6 +206,15 @@ width: 15%;
         .highlight {
             background: #ffd700 !important;
             font-weight: bold;
+        }
+
+        /* Chart container styling */
+        .chart-section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         @media (max-width: 768px) {
@@ -231,67 +263,77 @@ width: 15%;
             }
         }
     </style>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
 </head>
 <body>
     <div class="container">
         <h1>Dynamic Spending Rule Calculator</h1>
         <p class="subtitle">Calculate your retirement withdrawal amounts with dynamic ceiling and floor constraints</p>
 
-        <div class="input-section">
-            <h3>Initial Values</h3>
-            <div class="input-grid">
-                                <div class="input-group">
-                    <label for="startYear">Starting Year</label>
-                    <input type="number" id="startYear" value="2026" min="2000" max="2100">
+        <!-- TOP SECTION: Inputs and Chart -->
+        <div class="top-section">
+            <div class="input-section">
+                <h3>Initial Values</h3>
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label for="startYear">Starting Year</label>
+                        <input type="number" id="startYear" value="2026" min="2000" max="2100">
+                    </div>
 
-                <div class="input-group">
-                    <label for="initialPortfolio">Initial Portfolio Value (£)</label>
-                    <input type="number" id="initialPortfolio" value="100000" min="0" step="1000">
-                </div>
-                                                    <div class="input-group">
-                    <label for="numberOfYears">Number of Years</label>
-                    <input type="number" id="numberOfYears" value="30" min="1" max="100">
-                </div>
+                    <div class="input-group">
+                        <label for="initialPortfolio">Initial Portfolio Value (£)</label>
+                        <input type="number" id="initialPortfolio" value="100000" min="0" step="1000">
+                    </div>
 
-                <div class="input-group">
-                    <label for="withdrawalRate">Withdrawal Rate (%)</label>
-                    <input type="number" id="withdrawalRate" value="4" min="0" max="100" step="0.1">
+                    <div class="input-group">
+                        <label for="numberOfYears">Number of Years</label>
+                        <input type="number" id="numberOfYears" value="30" min="1" max="100">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="withdrawalRate">Withdrawal Rate (%)</label>
+                        <input type="number" id="withdrawalRate" value="4" min="0" max="100" step="0.1">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="ceilingIncrease">Ceiling Increase (%)</label>
+                        <input type="number" id="ceilingIncrease" value="5" min="0" max="100" step="0.1">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="floorDecrease">Floor Decrease (%)</label>
+                        <input type="number" id="floorDecrease" value="2.5" min="0" max="100" step="0.1">
+                    </div>
                 </div>
-                <div class="input-group">
-                    <label for="ceilingIncrease">Ceiling Increase (%)</label>
-                    <input type="number" id="ceilingIncrease" value="5" min="0" max="100" step="0.1">
-                </div>
-                <div class="input-group">
-                    <label for="floorDecrease">Floor Decrease (%)</label>
-                    <input type="number" id="floorDecrease" value="2.5" min="0" max="100" step="0.1">
-                </div>
-                                                        </div>
                             
-
                 <div id="yearOverridesContent" style="display: block;">
-                    <div style="margin-bottom: 15px;">
+                    <div style="margin-bottom: 15px; margin-top: 20px;">
                         <label>Set specific values for individual years:</label>
-<div class="input-grid" style="display: flex; gap: 20px; justify-content: flex-start; align-items: flex-start; margin-top: 15px;">
-                  <div class="input-group" style="display: flex; flex-direction: column; align-items: center; flex: 0 0 auto;">
-                    <label style="font-weight: bold; font-size: 0.9em; text-align: center; width: 100%; margin-bottom: 8px;">Year #</label>
-                    <input type="number" id="overrideYear" placeholder="0" min="1" step="1" style="width: 80px; padding: 8px; font-size: 0.9em;">
-                  </div>
-                  <div class="input-group" style="display: flex; flex-direction: column; align-items: center; flex: 0 0 auto;">
-                    <label style="font-weight: bold; font-size: 0.9em; text-align: center; width: 100%; margin-bottom: 8px;">Portfolio £</label>
-                    <input type="number" id="overridePortfolio" placeholder="0" step="1000" style="width: 120px; padding: 8px; font-size: 0.9em;">
-                  </div>
-                  <div class="input-group" style="display: flex; flex-direction: column; align-items: center; flex: 0 0 auto;">
-                    <label style="font-weight: bold; font-size: 0.9em; text-align: center; width: 100%; margin-bottom: 8px;">Inflation %</label>
-                    <input type="number" id="overrideInflation" placeholder="0" step="0.1" style="width: 90px; padding: 8px; font-size: 0.9em;">
-                  </div>
-                  <button type="button" onclick="addYearOverride()" style="padding: 8px 15px; background: #0969da; color: white; border: none; border-radius: 6px; cursor: pointer; align-self: flex-end; margin-bottom: 4px;">Add Values</button>
-                </div>                    </div>
+                        <div class="input-grid" style="display: flex; gap: 20px; justify-content: flex-start; align-items: flex-start; margin-top: 15px;">
+                            <div class="input-group" style="display: flex; flex-direction: column; align-items: center; flex: 0 0 auto;">
+                                <label style="font-weight: bold; font-size: 0.9em; text-align: center; width: 100%; margin-bottom: 8px;">Year #</label>
+                                <input type="number" id="overrideYear" placeholder="0" min="1" step="1" style="width: 80px; padding: 8px; font-size: 0.9em;">
+                            </div>
+                            <div class="input-group" style="display: flex; flex-direction: column; align-items: center; flex: 0 0 auto;">
+                                <label style="font-weight: bold; font-size: 0.9em; text-align: center; width: 100%; margin-bottom: 8px;">Portfolio £</label>
+                                <input type="number" id="overridePortfolio" placeholder="0" step="1000" style="width: 120px; padding: 8px; font-size: 0.9em;">
+                            </div>
+                            <div class="input-group" style="display: flex; flex-direction: column; align-items: center; flex: 0 0 auto;">
+                                <label style="font-weight: bold; font-size: 0.9em; text-align: center; width: 100%; margin-bottom: 8px;">Inflation %</label>
+                                <input type="number" id="overrideInflation" placeholder="0" step="0.1" style="width: 90px; padding: 8px; font-size: 0.9em;">
+                            </div>
+                            <button type="button" onclick="addYearOverride()" style="padding: 8px 15px; background: #0969da; color: white; border: none; border-radius: 6px; cursor: pointer; align-self: flex-end; margin-bottom: 4px;">Add Values</button>
+                        </div>
+                    </div>
                     <div id="overridesList" style="margin-top: 10px; display: none;"></div>
                 </div>
             </div>
+
+            <!-- Portfolio Value and Withdrawal Chart -->
+            <div class="chart-section" id="chartContainer">
+                <canvas id="portfolioChart"></canvas>
             </div>
-        </div> 
+        </div>
 
         <div class="button-group">
             <button class="btn-primary" onclick="generateTable()">Generate Calculation Table</button>
@@ -299,30 +341,27 @@ width: 15%;
             <button class="btn-danger" onclick="resetCalculator()">Reset</button>
         </div>
 
-                                        <!-- Portfolio Value and Withdrawal Chart -->
-                                    <div id="chartContainer" style="width: 100%; margin-top: 20px;">
-                                                                <canvas id="portfolioChart"></canvas>
-                                                            </div>
-
-
-        <div class="results-container" id="resultsContainer">
-            <h3>Yearly Withdrawal Calculations</h3>
-            <div class="table-wrapper">
-                <table id="resultsTable">
-                    <thead>
-                        <tr>
-                            <th>Year</th>
-                            <th>Portfolio Value (£)</th>
-                            <th>Inflation Rate (%)</th>
-                            <th>Calculated Withdrawal (£)</th>
-                            <th>Ceiling (£)</th>
-                            <th>Floor (£)</th>
-                            <th>Final Withdrawal (£)</th>
-                        </tr>
-                    </thead>
-                    <tbody id="resultsBody">
-                    </tbody>
-                </table>
+        <!-- BOTTOM SECTION: Results Table -->
+        <div class="bottom-section">
+            <div class="results-container" id="resultsContainer">
+                <h3>Yearly Withdrawal Calculations</h3>
+                <div class="table-wrapper">
+                    <table id="resultsTable">
+                        <thead>
+                            <tr>
+                                <th>Year</th>
+                                <th>Portfolio Value (£)</th>
+                                <th>Inflation Rate (%)</th>
+                                <th>Calculated Withdrawal (£)</th>
+                                <th>Ceiling (£)</th>
+                                <th>Floor (£)</th>
+                                <th>Final Withdrawal (£)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultsBody">
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -331,12 +370,11 @@ width: 15%;
         // Load data from localStorage
         let calculationData = JSON.parse(localStorage.getItem('dynamicSpendingData')) || [];
         let historicalRecords = JSON.parse(localStorage.getItem('dynamicSpendingHistory')) || [];
-                let yearOverrides = JSON.parse(localStorage.getItem('dynamicSpendingOverrides')) || {};
+        let yearOverrides = JSON.parse(localStorage.getItem('dynamicSpendingOverrides')) || {};
 
         // Load data on page load
         window.addEventListener('DOMContentLoaded', function() {
             if (calculationData.length > 0) {
-                
                 displayStoredData();
             }
         });
@@ -377,15 +415,17 @@ width: 15%;
             for (let i = 0; i < numberOfYears; i++) {
                 const year = startYear + i;
                 
-            // Check for year-specific overrides
-            if (yearOverrides[year]?.portfolio !== undefined) {
-                portfolioValue = yearOverrides[year].portfolio;
-            }
+                // Check for year-specific overrides
+                if (yearOverrides[year]?.portfolio !== undefined) {
+                    portfolioValue = yearOverrides[year].portfolio;
+                }
                 
                 // Use inflation from previous records if available, otherwise 3.0
-            const inflationRate = yearOverrides[year]?.inflation !== undefined
-                ? yearOverrides[year].inflation
-                : (inflationRates[i] !== undefined ? inflationRates[i] : 3.0);                const calculatedWithdrawal = portfolioValue * (withdrawalRate / 100);
+                const inflationRate = yearOverrides[year]?.inflation !== undefined
+                    ? yearOverrides[year].inflation
+                    : (inflationRates[i] !== undefined ? inflationRates[i] : 3.0);
+                
+                const calculatedWithdrawal = portfolioValue * (withdrawalRate / 100);
                 
                 let ceiling, floor, finalWithdrawal;
                 
@@ -437,6 +477,9 @@ width: 15%;
             localStorage.setItem('dynamicSpendingData', JSON.stringify(calculationData));
             
             document.getElementById('resultsContainer').style.display = 'block';
+            
+            // Render the chart after generating table
+            renderPortfolioChart();
         }
 
         // Called every time a user changes a single year's inflation value
@@ -446,14 +489,14 @@ width: 15%;
             generateTable(); // Recompute everything with updated inflation rates
         }
 
-                // Called every time a user changes a single year's portfolio value
+        // Called every time a user changes a single year's portfolio value
         function updatePortfolioValue(index, value) {
             calculationData[index].portfolioValue = parseFloat(value);
             localStorage.setItem('dynamicSpendingData', JSON.stringify(calculationData));
             generateTable(); // Recompute everything with updated portfolio values
         }
 
-                // Toggle year overrides section visibility
+        // Toggle year overrides section visibility
         function toggleYearOverrides() {
             const content = document.getElementById('yearOverridesContent');
             content.style.display = content.style.display === 'none' ? 'block' : 'none';
@@ -475,12 +518,11 @@ width: 15%;
             if (!isNaN(portfolio)) yearOverrides[yearNum].portfolio = portfolio;
             
             localStorage.setItem('dynamicSpendingOverrides', JSON.stringify(yearOverrides));
-//             displayYearOverrides();
-                    
-        // Regenerate table if it exists
-        if (calculationData.length > 0) {
-            generateTable();
-        }
+            
+            // Regenerate table if it exists
+            if (calculationData.length > 0) {
+                generateTable();
+            }
             
             // Clear inputs
             document.getElementById('overrideYear').value = '';
@@ -515,11 +557,11 @@ width: 15%;
             delete yearOverrides[year];
             localStorage.setItem('dynamicSpendingOverrides', JSON.stringify(yearOverrides));
             displayYearOverrides();
-                    
-        // Regenerate table if it exists
-        if (calculationData.length > 0) {
-            generateTable();
-        }
+            
+            // Regenerate table if it exists
+            if (calculationData.length > 0) {
+                generateTable();
+            }
         }
 
         function displayStoredData() {
@@ -543,6 +585,7 @@ width: 15%;
             });
             
             document.getElementById('resultsContainer').style.display = 'block';
+            renderPortfolioChart();
         }
 
         function exportToCSV() {
@@ -581,65 +624,70 @@ width: 15%;
         // Load and display year overrides on page load
         displayYearOverrides();
 
-                            // Render portfolio chart
-                    renderPortfolioChart();
+        // Render portfolio chart
+        function renderPortfolioChart() {
+            if (calculationData.length === 0) return;
 
-                    function renderPortfolioChart() {
-                                        if (calculationData.length === 0) return;
+            // Prepare chart data
+            const labels = [];
+            const portfolioValues = [];
 
-                                        // Prepare chart data
-                                        const labels = [];
-                                        const portfolioValues = [];
-
-                                        calculationData.forEach(row => {
-                                                                labels.push(row.year);
-                                                                portfolioValues.push(row.portfolioValue);
-                                                            });
-                                        // Create chart
-                                        const ctx = document.getElementById('portfolioChart').getContext('2d');
-                                        const chartConfig = {
-                                                                type: 'line',
-                                                                data: {
-                                                                                            labels: labels,
-                                                                                            datasets: [
-                                                                                                                            {
-                                                                                                                                                                label: 'Portfolio Value (£)',
-                                                                                                                                                                data: portfolioValues,
-                                                                                                                                                                borderColor: '#667eea',
-                                                                                                                                                                backgroundColor: 'rgba(102, 126, 234, 0.1)',
-                                                                                                                                                                borderWidth: 2,
-                                                                                                                                                                tension: 0.3,
-                                                                                                                                                                fill: true
-                                                                                                                                                                                                },
-                                                                                                                            
-                                                                                                                        ]
-                                                                                                                    },
-                                                                options: {
-                                                                                            responsive: true,
-                                                                                            maintainAspectRatio: true,
-                                                                                            plugins: {
-                                                                                                                            legend: {
-                                                                                                                                                                position: 'top'
-                                                                                                                                                                                                },
-                                                                                                                            title: {
-                                                                                                                                                                display: true,
-                                text: 'Portfolio Value Projection (2026-2055)'                                                                                                                                                                                                }
-                                                                                                                                                        },
-                                                                                            scales: {
-                                                                                                                            y: {
-                                                                                                                                                                beginAtZero: true,
-                                                                                                                                                                ticks: {
-                                                                                                                                                                                                        callback: function(value) {
-                                                                                                                                                                                                                                                    return '£' + value.toLocaleString();
-                                                                                                                                                                                                                                                }
-                                                                                                                                                                                                                                            }
-                                                                                                                                                                                                }
-                                                                                                                                                        }
-                                                                                                                    }
-                                                                                    };
-                                        // Create the chart instance
-                                        new Chart(ctx, chartConfig);
-                                    }
-        </script>
+            calculationData.forEach(row => {
+                labels.push(row.year);
+                portfolioValues.push(row.portfolioValue);
+            });
+            
+            // Destroy existing chart if it exists
+            const existingChart = Chart.getChart('portfolioChart');
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            
+            // Create chart
+            const ctx = document.getElementById('portfolioChart').getContext('2d');
+            const chartConfig = {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Portfolio Value (£)',
+                            data: portfolioValues,
+                            borderColor: '#667eea',
+                            backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.3,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            position: 'top'
+                        },
+                        title: {
+                            display: true,
+                            text: 'Portfolio Value Projection'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '£' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            // Create the chart instance
+            new Chart(ctx, chartConfig);
+        }
+    </script>
 </body>
 </html>
