@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Spending Rule Calculator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Vanguard Dynamic Spending Rule Calculator</title>
     <style>
         * {
             margin: 0;
@@ -20,7 +20,6 @@
             justify-content: center;
             align-items: center;
         }
-
 
         h3 {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -78,9 +77,6 @@
             margin-top: 15px;
         }
 
-        /* Removed hardcoded width for better grid responsiveness */
-        /* Previously had: width: 15% on specific input IDs */
-
         .input-group {
             display: flex;
             flex-direction: column;
@@ -94,12 +90,13 @@
         }
 
         input[type="number"] {
-            padding: 10px;
+            padding: 12px;
             max-width: 100%;
             border: 2px solid #a78bfa;
             border-radius: 5px;
             font-size: 1em;
             transition: border-color 0.3s;
+            min-height: 44px; /* Touch-friendly minimum */
         }
 
         input[type="number"]:focus {
@@ -123,6 +120,8 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
+            min-height: 44px; /* Touch-friendly minimum */
+            min-width: 44px;
         }
 
         .btn-primary {
@@ -173,12 +172,14 @@
             overflow-x: auto;
             border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
             background: white;
+            min-width: 600px; /* Ensures horizontal scroll on very small screens */
         }
 
         thead {
@@ -215,51 +216,448 @@
             border-radius: 10px;
             margin-top: 20px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+            width: 100%;
+            overflow: hidden;
         }
 
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            height: auto;
+            min-height: 300px;
+            max-height: 500px;
+        }
+
+        .chart-section canvas {
+            max-width: 100% !important;
+            height: auto !important;
+            display: block;
+        }
+
+        /* Year overrides section */
+        .override-inputs {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-start;
+            align-items: flex-start;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .override-input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 0 0 auto;
+        }
+
+        .override-label {
+            font-weight: bold;
+            font-size: 0.9em;
+            text-align: center;
+            width: 100%;
+            margin-bottom: 8px;
+        }
+
+        .override-input-small {
+            width: 80px;
+            padding: 10px;
+            font-size: 0.9em;
+            min-height: 44px;
+        }
+
+        .override-input-medium {
+            width: 120px;
+            padding: 10px;
+            font-size: 0.9em;
+            min-height: 44px;
+        }
+
+        .override-input-narrow {
+            width: 90px;
+            padding: 10px;
+            font-size: 0.9em;
+            min-height: 44px;
+        }
+
+        .override-add-btn {
+            padding: 10px 15px;
+            background: #0969da;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            align-self: flex-end;
+            margin-bottom: 4px;
+            min-height: 44px;
+            font-size: 0.95em;
+        }
+
+        .overrides-list {
+            margin-top: 10px;
+        }
+
+        .override-item {
+            background: #f6f8fa;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .override-delete-btn {
+            padding: 8px 12px;
+            background: #d73a49;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            min-height: 40px;
+            font-size: 0.9em;
+        }
+
+        /* Hide Active Overrides section */
+        .overrides-list {
+            display: none !important;
+        }
+
+        /* Inline table inputs */
+        .portfolio-input, .inflation-input {
+            width: 100px;
+            padding: 8px;
+            min-height: 40px;
+            font-size: 0.9em;
+        }
+
+        /* ============================================
+           TABLET RESPONSIVE (max-width: 768px)
+           ============================================ */
         @media (max-width: 768px) {
+            body {
+                padding: 15px;
+                align-items: flex-start;
+            }
+
+            .container {
+                padding: 20px;
+                border-radius: 10px;
+            }
+
+            h1 {
+                font-size: 1.6em;
+            }
+
+            h3 {
+                font-size: 1.1em;
+                padding: 10px 15px;
+            }
+
+            .subtitle {
+                font-size: 0.9em;
+                margin-bottom: 20px;
+            }
+
+            .top-section, .bottom-section {
+                padding: 15px;
+            }
+
+            .input-section {
+                padding: 15px;
+            }
+
+            /* Stack input grid vertically on tablets */
+            .input-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            /* Override inputs responsive */
+            .override-inputs {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+                width: 100%;
+            }
+
+            .override-input-group {
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .override-input-small,
+            .override-input-medium,
+            .override-input-narrow {
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+            }
+
+            .override-add-btn {
+                width: 100%;
+                max-width: 100%;
+                align-self: stretch;
+                box-sizing: border-box;
+            }
+
+            /* Stack buttons vertically */
+            .button-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            button {
+                width: 100%;
+                padding: 14px 20px;
+                font-size: 1em;
+            }
+
+            /* Table adjustments for tablets */
+            th, td {
+                padding: 10px 8px;
+                font-size: 0.85em;
+            }
+
+            .portfolio-input, .inflation-input {
+                width: 90px;
+                padding: 6px;
+                font-size: 0.85em;
+            }
+
+            /* Chart section */
+            .chart-section {
+                padding: 15px;
+            }
+
+            .chart-wrapper {
+                min-height: 250px;
+                max-height: 400px;
+            }
+
+            /* Override items */
+            .override-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .override-delete-btn {
+                width: 100%;
+            }
+        }
+
+        /* ============================================
+           MOBILE RESPONSIVE (max-width: 480px)
+           ============================================ */
+        @media (max-width: 480px) {
             body {
                 padding: 10px;
             }
 
             .container {
-                padding: 20px;
+                padding: 15px;
+                border-radius: 8px;
             }
 
             h1 {
-                font-size: 1.5em;
+                font-size: 1.3em;
+                margin-bottom: 8px;
             }
 
-            .input-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .button-group {
-                flex-direction: column;
-            }
-
-            button {
-                width: 100%;
-            }
-
-            th, td {
-                padding: 8px;
-                font-size: 0.85em;
-            }
-        }
-
-        @media (max-width: 480px) {
-            h1 {
-                font-size: 1.2em;
+            h3 {
+                font-size: 1em;
+                padding: 10px 12px;
+                margin-bottom: 15px;
             }
 
             .subtitle {
                 font-size: 0.85em;
+                margin-bottom: 15px;
+                line-height: 1.4;
+            }
+
+            .top-section, .bottom-section {
+                padding: 12px;
+            }
+
+            .input-section {
+                padding: 12px;
+            }
+
+            /* Larger labels for better readability */
+            label {
+                font-size: 0.95em;
+                margin-bottom: 6px;
+            }
+
+            /* Larger inputs for touch */
+            input[type="number"] {
+                padding: 14px;
+                font-size: 16px; /* Prevents zoom on iOS */
+                min-height: 48px; /* Extra touch-friendly */
+            }
+
+            /* Button enhancements */
+            button {
+                padding: 16px 20px;
+                font-size: 1em;
+                min-height: 48px;
+            }
+
+            /* Table adjustments for phones */
+            th, td {
+                padding: 8px 6px;
+                font-size: 0.75em;
+            }
+
+            th {
+                font-size: 0.7em;
+            }
+
+            .portfolio-input, .inflation-input {
+                width: 85px;
+                padding: 6px 4px;
+                font-size: 0.8em;
+                min-height: 38px;
+            }
+
+            /* Chart section */
+            .chart-section {
+                padding: 12px;
+            }
+
+            .chart-wrapper {
+                min-height: 200px;
+                max-height: 350px;
+            }
+
+            /* Override section improvements */
+            .override-inputs {
+                gap: 10px;
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .override-input-group {
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .override-input-small,
+            .override-input-medium,
+            .override-input-narrow {
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+            }
+
+            .override-label {
+                font-size: 0.85em;
+            }
+
+            .override-add-btn {
+                padding: 14px 15px;
+                font-size: 0.9em;
+                min-height: 48px;
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+            }
+
+            .override-item {
+                padding: 12px;
+                font-size: 0.9em;
+            }
+
+            .override-delete-btn {
+                padding: 12px;
+                min-height: 44px;
+            }
+
+            /* Reduce overall spacing */
+            .input-grid {
+                gap: 10px;
+                margin-top: 12px;
+            }
+
+            .button-group {
+                margin: 15px 0;
+                gap: 8px;
+            }
+        }
+
+        /* ============================================
+           EXTRA SMALL MOBILE (max-width: 360px)
+           ============================================ */
+        @media (max-width: 360px) {
+            body {
+                padding: 8px;
+            }
+
+            .container {
+                padding: 12px;
+            }
+
+            h1 {
+                font-size: 1.15em;
+            }
+
+            h3 {
+                font-size: 0.95em;
+                padding: 8px 10px;
+            }
+
+            .subtitle {
+                font-size: 0.8em;
             }
 
             th, td {
-                padding: 6px;
+                padding: 6px 4px;
+                font-size: 0.7em;
+            }
+
+            .portfolio-input, .inflation-input {
+                width: 75px;
+                padding: 5px 3px;
                 font-size: 0.75em;
+            }
+        }
+
+        /* ============================================
+           LANDSCAPE MOBILE OPTIMIZATION
+           ============================================ */
+        @media (max-height: 500px) and (orientation: landscape) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 1.3em;
+                margin-bottom: 5px;
+            }
+
+            .subtitle {
+                margin-bottom: 10px;
+            }
+
+            .top-section, .bottom-section {
+                padding: 10px;
+            }
+
+            .input-section {
+                padding: 10px;
+            }
+
+            h3 {
+                padding: 8px 12px;
+                margin-bottom: 10px;
             }
         }
     </style>
@@ -267,7 +665,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Dynamic Spending Rule Calculator</h1>
+        <h1>Vanguard Dynamic Spending Rule Calculator</h1>
         <p class="subtitle">Calculate your retirement withdrawal amounts with dynamic ceiling and floor constraints</p>
 
         <!-- TOP SECTION: Inputs and Chart -->
@@ -309,29 +707,31 @@
                 <div id="yearOverridesContent" style="display: block;">
                     <div style="margin-bottom: 15px; margin-top: 20px;">
                         <label>Set specific values for individual years:</label>
-                        <div class="input-grid" style="display: flex; gap: 20px; justify-content: flex-start; align-items: flex-start; margin-top: 15px;">
-                            <div class="input-group" style="display: flex; flex-direction: column; align-items: center; flex: 0 0 auto;">
-                                <label style="font-weight: bold; font-size: 0.9em; text-align: center; width: 100%; margin-bottom: 8px;">Year #</label>
-                                <input type="number" id="overrideYear" placeholder="0" min="1" step="1" style="width: 80px; padding: 8px; font-size: 0.9em;">
+                        <div class="override-inputs">
+                            <div class="override-input-group">
+                                <label class="override-label">Year #</label>
+                                <input type="number" id="overrideYear" placeholder="0" min="1" step="1" class="override-input-small">
                             </div>
-                            <div class="input-group" style="display: flex; flex-direction: column; align-items: center; flex: 0 0 auto;">
-                                <label style="font-weight: bold; font-size: 0.9em; text-align: center; width: 100%; margin-bottom: 8px;">Portfolio £</label>
-                                <input type="number" id="overridePortfolio" placeholder="0" step="1000" style="width: 120px; padding: 8px; font-size: 0.9em;">
+                            <div class="override-input-group">
+                                <label class="override-label">Portfolio £</label>
+                                <input type="number" id="overridePortfolio" placeholder="0" step="1000" class="override-input-medium">
                             </div>
-                            <div class="input-group" style="display: flex; flex-direction: column; align-items: center; flex: 0 0 auto;">
-                                <label style="font-weight: bold; font-size: 0.9em; text-align: center; width: 100%; margin-bottom: 8px;">Inflation %</label>
-                                <input type="number" id="overrideInflation" placeholder="0" step="0.1" style="width: 90px; padding: 8px; font-size: 0.9em;">
+                            <div class="override-input-group">
+                                <label class="override-label">Inflation %</label>
+                                <input type="number" id="overrideInflation" placeholder="0" step="0.1" class="override-input-narrow">
                             </div>
-                            <button type="button" onclick="addYearOverride()" style="padding: 8px 15px; background: #0969da; color: white; border: none; border-radius: 6px; cursor: pointer; align-self: flex-end; margin-bottom: 4px;">Add Values</button>
+                            <button type="button" onclick="addYearOverride()" class="override-add-btn">Add Values</button>
                         </div>
                     </div>
-                    <div id="overridesList" style="margin-top: 10px; display: none;"></div>
+                    <div id="overridesList" class="overrides-list" style="display: none;"></div>
                 </div>
             </div>
 
             <!-- Portfolio Value and Withdrawal Chart -->
             <div class="chart-section" id="chartContainer">
-                <canvas id="portfolioChart"></canvas>
+                <div class="chart-wrapper">
+                    <canvas id="portfolioChart"></canvas>
+                </div>
             </div>
         </div>
 
@@ -376,6 +776,11 @@
         window.addEventListener('DOMContentLoaded', function() {
             if (calculationData.length > 0) {
                 displayStoredData();
+            }
+            // Ensure chart container is visible even without data
+            const chartContainer = document.getElementById('chartContainer');
+            if (chartContainer) {
+                chartContainer.style.display = 'block';
             }
         });
 
@@ -458,14 +863,14 @@
                 // Each inflation cell is editable, updates for that year only
                 const rowHtml = `
                     <td>${year}</td>
-                    <td><input type="number" class="portfolio-input" value="${portfolioValue.toFixed(2)}" step="1000" style="width: 120px; padding: 5px;" onchange="updatePortfolioValue(${i}, this.value)"></td>
-                    <td><input type="number" class="inflation-input" value="${inflationRate.toFixed(1)}" step="0.1" style="width: 80px; padding: 5px;" 
+                    <td><input type="number" class="portfolio-input" value="${portfolioValue.toFixed(2)}" step="1000" onchange="updatePortfolioValue(${i}, this.value)"></td>
+                    <td><input type="number" class="inflation-input" value="${inflationRate.toFixed(1)}" step="0.1" 
                          onchange="updateInflation(${i}, this.value)">
                     </td>
-                    <td>£${calculatedWithdrawal.toFixed(2).replace(/\\B(?=(\\d{3})+(?!\\d))/g, ",")}</td>
-                    <td>£${ceiling.toFixed(2).replace(/\\B(?=(\\d{3})+(?!\\d))/g, ",")}</td>
-                    <td>£${floor.toFixed(2).replace(/\\B(?=(\\d{3})+(?!\\d))/g, ",")}</td>
-                    <td class="highlight">£${finalWithdrawal.toFixed(2).replace(/\\B(?=(\\d{3})+(?!\\d))/g, ",")}</td>
+                    <td>£${calculatedWithdrawal.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                    <td>£${ceiling.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                    <td>£${floor.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                    <td class="highlight">£${finalWithdrawal.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
                 `;
                 row.innerHTML = rowHtml;
                 
@@ -524,6 +929,9 @@
                 generateTable();
             }
             
+            // Display the overrides list
+            displayYearOverrides();
+            
             // Clear inputs
             document.getElementById('overrideYear').value = '';
             document.getElementById('overrideInflation').value = '';
@@ -534,19 +942,21 @@
         function displayYearOverrides() {
             const listDiv = document.getElementById('overridesList');
             if (Object.keys(yearOverrides).length === 0) {
+                listDiv.style.display = 'none';
                 listDiv.innerHTML = '';
                 return;
             }
             
-            let html = '<div style="margin-top: 10px;"><strong>Active Overrides:</strong></div>';
+            listDiv.style.display = 'block';
+            let html = '<div style="margin-top: 10px; margin-bottom: 5px;"><strong>Active Overrides:</strong></div>';
             for (const [year, values] of Object.entries(yearOverrides).sort((a, b) => a[0] - b[0])) {
-                html += `<div style="background: #f6f8fa; padding: 8px; margin: 5px 0; border-radius: 6px; display: flex; justify-content: space-between; align-items: center;">`;
+                html += `<div class="override-item">`;
                 html += `<span>Year ${year}: `;
                 if (values.inflation !== undefined) html += `Inflation ${values.inflation}%`;
                 if (values.inflation !== undefined && values.portfolio !== undefined) html += ', ';
                 if (values.portfolio !== undefined) html += `Portfolio £${values.portfolio.toLocaleString()}`;
                 html += `</span>`;
-                html += `<button onclick="deleteYearOverride(${year})" style="padding: 4px 8px; background: #d73a49; color: white; border: none; border-radius: 4px; cursor: pointer;">Delete</button>`;
+                html += `<button onclick="deleteYearOverride(${year})" class="override-delete-btn">Delete</button>`;
                 html += `</div>`;
             }
             listDiv.innerHTML = html;
@@ -572,14 +982,14 @@
                 const tableRow = tbody.insertRow();
                 const rowHtml = `
                     <td>${row.year}</td>
-                    <td><input type="number" class="portfolio-input" value="${row.portfolioValue.toFixed(2)}" step="1000" style="width: 120px; padding: 5px;" onchange="updatePortfolioValue(${i}, this.value)"></td>
-                    <td><input type="number" class="inflation-input" value="${row.inflationRate.toFixed(1)}" step="0.1" style="width: 80px; padding: 5px;" 
+                    <td><input type="number" class="portfolio-input" value="${row.portfolioValue.toFixed(2)}" step="1000" onchange="updatePortfolioValue(${i}, this.value)"></td>
+                    <td><input type="number" class="inflation-input" value="${row.inflationRate.toFixed(1)}" step="0.1" 
                          onchange="updateInflation(${i}, this.value)">
                     </td>
-                    <td>£${row.calculatedWithdrawal.toFixed(2).replace(/\\B(?=(\\d{3})+(?!\\d))/g, ",")}</td>
-                    <td>£${row.ceiling.toFixed(2).replace(/\\B(?=(\\d{3})+(?!\\d))/g, ",")}</td>
-                    <td>£${row.floor.toFixed(2).replace(/\\B(?=(\\d{3})+(?!\\d))/g, ",")}</td>
-                    <td class="highlight">£${row.finalWithdrawal.toFixed(2).replace(/\\B(?=(\\d{3})+(?!\\d))/g, ",")}</td>
+                    <td>£${row.calculatedWithdrawal.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                    <td>£${row.ceiling.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                    <td>£${row.floor.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                    <td class="highlight">£${row.finalWithdrawal.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
                 `;
                 tableRow.innerHTML = rowHtml;
             });
@@ -594,10 +1004,10 @@
                 return;
             }
             
-            let csv = 'Year,Portfolio Value,Inflation Rate,Calculated Withdrawal,Ceiling,Floor,Final Withdrawal\\n';
+            let csv = 'Year,Portfolio Value,Inflation Rate,Calculated Withdrawal,Ceiling,Floor,Final Withdrawal\n';
             
             calculationData.forEach(row => {
-                csv += `${row.year},${row.portfolioValue.toFixed(2)},${row.inflationRate.toFixed(1)},${row.calculatedWithdrawal.toFixed(2)},${row.ceiling.toFixed(2)},${row.floor.toFixed(2)},${row.finalWithdrawal.toFixed(2)}\\n`;
+                csv += `${row.year},${row.portfolioValue.toFixed(2)},${row.inflationRate.toFixed(1)},${row.calculatedWithdrawal.toFixed(2)},${row.ceiling.toFixed(2)},${row.floor.toFixed(2)},${row.finalWithdrawal.toFixed(2)}\n`;
             });
             
             const blob = new Blob([csv], { type: 'text/csv' });
@@ -624,7 +1034,7 @@
         // Load and display year overrides on page load
         displayYearOverrides();
 
-        // Render portfolio chart
+        // Render portfolio chart with responsive settings
         function renderPortfolioChart() {
             if (calculationData.length === 0) return;
 
@@ -643,7 +1053,12 @@
                 existingChart.destroy();
             }
             
-            // Create chart
+            // Determine screen size for responsive settings
+            const isMobile = window.innerWidth < 480;
+            const isTablet = window.innerWidth >= 480 && window.innerWidth < 768;
+            const isDesktop = window.innerWidth >= 768;
+            
+            // Create chart with responsive configuration
             const ctx = document.getElementById('portfolioChart').getContext('2d');
             const chartConfig = {
                 type: 'line',
@@ -655,22 +1070,54 @@
                             data: portfolioValues,
                             borderColor: '#667eea',
                             backgroundColor: 'rgba(102, 126, 234, 0.1)',
-                            borderWidth: 2,
+                            borderWidth: isMobile ? 1.5 : 2,
                             tension: 0.3,
-                            fill: true
+                            fill: true,
+                            pointRadius: isMobile ? 2 : 3,
+                            pointHoverRadius: isMobile ? 4 : 5
                         }
                     ]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: true,
+                    aspectRatio: isMobile ? 1 : (isTablet ? 1.5 : 2),
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
                     plugins: {
                         legend: {
-                            position: 'top'
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                font: {
+                                    size: isMobile ? 10 : (isTablet ? 11 : 12)
+                                },
+                                padding: isMobile ? 8 : 10,
+                                usePointStyle: true,
+                                boxWidth: isMobile ? 6 : 8
+                            }
                         },
                         title: {
                             display: true,
-                            text: 'Portfolio Value Projection'
+                            text: 'Portfolio Value Projection',
+                            font: {
+                                size: isMobile ? 13 : (isTablet ? 14 : 16),
+                                weight: 'bold'
+                            },
+                            padding: {
+                                top: isMobile ? 5 : 10,
+                                bottom: isMobile ? 10 : 15
+                            }
+                        },
+                        tooltip: {
+                            enabled: true,
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': £' + context.parsed.y.toLocaleString();
+                                }
+                            }
                         }
                     },
                     scales: {
@@ -678,9 +1125,47 @@
                             beginAtZero: true,
                             ticks: {
                                 callback: function(value) {
+                                    if (isMobile) {
+                                        // Shorter format for mobile
+                                        if (value >= 1000) {
+                                            return '£' + (value / 1000).toFixed(0) + 'k';
+                                        }
+                                        return '£' + value;
+                                    }
                                     return '£' + value.toLocaleString();
-                                }
+                                },
+                                font: {
+                                    size: isMobile ? 9 : (isTablet ? 10 : 11)
+                                },
+                                maxTicksLimit: isMobile ? 6 : 8
+                            },
+                            grid: {
+                                display: true,
+                                drawBorder: true,
+                                color: 'rgba(0, 0, 0, 0.05)'
                             }
+                        },
+                        x: {
+                            ticks: {
+                                font: {
+                                    size: isMobile ? 9 : (isTablet ? 10 : 11)
+                                },
+                                maxRotation: isMobile ? 45 : (isTablet ? 30 : 0),
+                                minRotation: isMobile ? 45 : 0,
+                                autoSkip: true,
+                                maxTicksLimit: isMobile ? 8 : (isTablet ? 12 : 15)
+                            },
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    layout: {
+                        padding: {
+                            left: isMobile ? 5 : 10,
+                            right: isMobile ? 5 : 10,
+                            top: 0,
+                            bottom: 0
                         }
                     }
                 }
@@ -688,6 +1173,17 @@
             // Create the chart instance
             new Chart(ctx, chartConfig);
         }
+
+        // Re-render chart on window resize for better responsiveness
+        let resizeTimeout;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(function() {
+                if (calculationData.length > 0) {
+                    renderPortfolioChart();
+                }
+            }, 250);
+        });
     </script>
 </body>
 </html>
