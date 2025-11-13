@@ -327,8 +327,15 @@
         }
 
         /* Inline table inputs */
-        .portfolio-input, .inflation-input {
-            width: 100px;
+        .portfolio-input {
+            width: 140px;
+            padding: 8px;
+            min-height: 40px;
+            font-size: 0.9em;
+        }
+        
+        .inflation-input {
+            width: 90px;
             padding: 8px;
             min-height: 40px;
             font-size: 0.9em;
@@ -418,14 +425,22 @@
 
             /* Table adjustments for tablets */
             th, td {
-                padding: 10px 8px;
+                padding: 10px 6px;
                 font-size: 0.85em;
             }
 
-            .portfolio-input, .inflation-input {
-                width: 90px;
+            /* Adjusted widths for tablet to show full decimal values */
+            .portfolio-input {
+                width: 130px;
                 padding: 6px;
-                font-size: 0.85em;
+                font-size: 0.82em;
+                text-align: right;
+            }
+            
+            .inflation-input {
+                width: 85px;
+                padding: 6px;
+                font-size: 0.82em;
             }
 
             /* Chart section */
@@ -509,7 +524,7 @@
 
             /* Table adjustments for phones */
             th, td {
-                padding: 8px 6px;
+                padding: 8px 4px;
                 font-size: 0.75em;
             }
 
@@ -517,10 +532,19 @@
                 font-size: 0.7em;
             }
 
-            .portfolio-input, .inflation-input {
-                width: 85px;
-                padding: 6px 4px;
-                font-size: 0.8em;
+            /* Increased width for portfolio input to show full decimal values */
+            .portfolio-input {
+                width: 118px;
+                padding: 6px 3px;
+                font-size: 0.75em;
+                min-height: 38px;
+                text-align: right;
+            }
+            
+            .inflation-input {
+                width: 75px;
+                padding: 6px 3px;
+                font-size: 0.75em;
                 min-height: 38px;
             }
 
@@ -615,14 +639,22 @@
             }
 
             th, td {
-                padding: 6px 4px;
+                padding: 6px 3px;
                 font-size: 0.7em;
             }
 
-            .portfolio-input, .inflation-input {
-                width: 75px;
-                padding: 5px 3px;
-                font-size: 0.75em;
+            /* Optimized widths for very small screens to show full decimal values */
+            .portfolio-input {
+                width: 108px;
+                padding: 4px 2px;
+                font-size: 0.68em;
+                text-align: right;
+            }
+            
+            .inflation-input {
+                width: 68px;
+                padding: 5px 2px;
+                font-size: 0.7em;
             }
         }
 
@@ -658,6 +690,25 @@
             h3 {
                 padding: 8px 12px;
                 margin-bottom: 10px;
+            }
+            
+            /* Ensure full decimal values are visible in landscape mode */
+            th, td {
+                padding: 8px 4px;
+                font-size: 0.75em;
+            }
+            
+            .portfolio-input {
+                width: 118px;
+                padding: 6px 3px;
+                font-size: 0.75em;
+                text-align: right;
+            }
+            
+            .inflation-input {
+                width: 75px;
+                padding: 6px 3px;
+                font-size: 0.75em;
             }
         }
     </style>
