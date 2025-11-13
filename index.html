@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,4 +30,1048 @@
             box-shadow: 0 4px 6px rgba(102, 126, 234, 0.3);
             font-size: 1.2em;
         }
-                    
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 1200px;
+            width: 100%;
+            padding: 30px;
+        }
+
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 0.95em;
+        }
+
+        /* Top section containing inputs and chart */
+        .top-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .input-section {
+            background: linear-gradient(135deg, #fef3c7 0%, #fce7f3 50%, #dbeafe 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: 600;
+            color: #6366f1;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+
+        input[type="number"] {
+            padding: 12px;
+            max-width: 100%;
+            border: 2px solid #a78bfa;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+            min-height: 44px; /* Touch-friendly minimum */
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        button {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-height: 44px; /* Touch-friendly minimum */
+            min-width: 44px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #5568d3 0%, #6a3d8f 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #e53e3e;
+            transform: translateY(-2px);
+        }
+
+        /* Bottom section containing results */
+        .bottom-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 25px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .results-container {
+            display: none;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            min-width: 600px; /* Ensures horizontal scroll on very small screens */
+        }
+
+        thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: right;
+        }
+
+        th:first-child, td:first-child {
+            text-align: center;
+        }
+
+        tbody tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        tbody tr:hover {
+            background: #e9ecef;
+        }
+
+        .highlight {
+            background: #ffd700 !important;
+            font-weight: bold;
+        }
+
+        /* Chart container styling */
+        .chart-section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-section canvas {
+            max-width: 100%;
+            height: auto !important;
+        }
+
+        /* Year overrides section */
+        .override-inputs {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-start;
+            align-items: flex-start;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .override-input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 0 0 auto;
+        }
+
+        .override-label {
+            font-weight: bold;
+            font-size: 0.9em;
+            text-align: center;
+            width: 100%;
+            margin-bottom: 8px;
+        }
+
+        .override-input-small {
+            width: 80px;
+            padding: 10px;
+            font-size: 0.9em;
+            min-height: 44px;
+        }
+
+        .override-input-medium {
+            width: 120px;
+            padding: 10px;
+            font-size: 0.9em;
+            min-height: 44px;
+        }
+
+        .override-input-narrow {
+            width: 90px;
+            padding: 10px;
+            font-size: 0.9em;
+            min-height: 44px;
+        }
+
+        .override-add-btn {
+            padding: 10px 15px;
+            background: #0969da;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            align-self: flex-end;
+            margin-bottom: 4px;
+            min-height: 44px;
+            font-size: 0.95em;
+        }
+
+        .overrides-list {
+            margin-top: 10px;
+        }
+
+        .override-item {
+            background: #f6f8fa;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .override-delete-btn {
+            padding: 8px 12px;
+            background: #d73a49;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            min-height: 40px;
+            font-size: 0.9em;
+        }
+
+        /* Inline table inputs */
+        .portfolio-input, .inflation-input {
+            width: 100px;
+            padding: 8px;
+            min-height: 40px;
+            font-size: 0.9em;
+        }
+
+        /* ============================================
+           TABLET RESPONSIVE (max-width: 768px)
+           ============================================ */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+                align-items: flex-start;
+            }
+
+            .container {
+                padding: 20px;
+                border-radius: 10px;
+            }
+
+            h1 {
+                font-size: 1.6em;
+            }
+
+            h3 {
+                font-size: 1.1em;
+                padding: 10px 15px;
+            }
+
+            .subtitle {
+                font-size: 0.9em;
+                margin-bottom: 20px;
+            }
+
+            .top-section, .bottom-section {
+                padding: 15px;
+            }
+
+            .input-section {
+                padding: 15px;
+            }
+
+            /* Stack input grid vertically on tablets */
+            .input-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            /* Override inputs responsive */
+            .override-inputs {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+
+            .override-input-group {
+                width: 100%;
+            }
+
+            .override-input-small,
+            .override-input-medium,
+            .override-input-narrow {
+                width: 100%;
+            }
+
+            .override-add-btn {
+                width: 100%;
+                align-self: stretch;
+            }
+
+            /* Stack buttons vertically */
+            .button-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            button {
+                width: 100%;
+                padding: 14px 20px;
+                font-size: 1em;
+            }
+
+            /* Table adjustments for tablets */
+            th, td {
+                padding: 10px 8px;
+                font-size: 0.85em;
+            }
+
+            .portfolio-input, .inflation-input {
+                width: 90px;
+                padding: 6px;
+                font-size: 0.85em;
+            }
+
+            /* Chart section */
+            .chart-section {
+                padding: 15px;
+            }
+
+            /* Override items */
+            .override-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .override-delete-btn {
+                width: 100%;
+            }
+        }
+
+        /* ============================================
+           MOBILE RESPONSIVE (max-width: 480px)
+           ============================================ */
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 15px;
+                border-radius: 8px;
+            }
+
+            h1 {
+                font-size: 1.3em;
+                margin-bottom: 8px;
+            }
+
+            h3 {
+                font-size: 1em;
+                padding: 10px 12px;
+                margin-bottom: 15px;
+            }
+
+            .subtitle {
+                font-size: 0.85em;
+                margin-bottom: 15px;
+                line-height: 1.4;
+            }
+
+            .top-section, .bottom-section {
+                padding: 12px;
+            }
+
+            .input-section {
+                padding: 12px;
+            }
+
+            /* Larger labels for better readability */
+            label {
+                font-size: 0.95em;
+                margin-bottom: 6px;
+            }
+
+            /* Larger inputs for touch */
+            input[type="number"] {
+                padding: 14px;
+                font-size: 16px; /* Prevents zoom on iOS */
+                min-height: 48px; /* Extra touch-friendly */
+            }
+
+            /* Button enhancements */
+            button {
+                padding: 16px 20px;
+                font-size: 1em;
+                min-height: 48px;
+            }
+
+            /* Table adjustments for phones */
+            th, td {
+                padding: 8px 6px;
+                font-size: 0.75em;
+            }
+
+            th {
+                font-size: 0.7em;
+            }
+
+            .portfolio-input, .inflation-input {
+                width: 85px;
+                padding: 6px 4px;
+                font-size: 0.8em;
+                min-height: 38px;
+            }
+
+            /* Chart section */
+            .chart-section {
+                padding: 12px;
+            }
+
+            /* Override section improvements */
+            .override-inputs {
+                gap: 10px;
+            }
+
+            .override-label {
+                font-size: 0.85em;
+            }
+
+            .override-add-btn {
+                padding: 14px 15px;
+                font-size: 0.9em;
+                min-height: 48px;
+            }
+
+            .override-item {
+                padding: 12px;
+                font-size: 0.9em;
+            }
+
+            .override-delete-btn {
+                padding: 12px;
+                min-height: 44px;
+            }
+
+            /* Reduce overall spacing */
+            .input-grid {
+                gap: 10px;
+                margin-top: 12px;
+            }
+
+            .button-group {
+                margin: 15px 0;
+                gap: 8px;
+            }
+        }
+
+        /* ============================================
+           EXTRA SMALL MOBILE (max-width: 360px)
+           ============================================ */
+        @media (max-width: 360px) {
+            body {
+                padding: 8px;
+            }
+
+            .container {
+                padding: 12px;
+            }
+
+            h1 {
+                font-size: 1.15em;
+            }
+
+            h3 {
+                font-size: 0.95em;
+                padding: 8px 10px;
+            }
+
+            .subtitle {
+                font-size: 0.8em;
+            }
+
+            th, td {
+                padding: 6px 4px;
+                font-size: 0.7em;
+            }
+
+            .portfolio-input, .inflation-input {
+                width: 75px;
+                padding: 5px 3px;
+                font-size: 0.75em;
+            }
+        }
+
+        /* ============================================
+           LANDSCAPE MOBILE OPTIMIZATION
+           ============================================ */
+        @media (max-height: 500px) and (orientation: landscape) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 1.3em;
+                margin-bottom: 5px;
+            }
+
+            .subtitle {
+                margin-bottom: 10px;
+            }
+
+            .top-section, .bottom-section {
+                padding: 10px;
+            }
+
+            .input-section {
+                padding: 10px;
+            }
+
+            h3 {
+                padding: 8px 12px;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Dynamic Spending Rule Calculator</h1>
+        <p class="subtitle">Calculate your retirement withdrawal amounts with dynamic ceiling and floor constraints</p>
+
+        <!-- TOP SECTION: Inputs and Chart -->
+        <div class="top-section">
+            <div class="input-section">
+                <h3>Initial Values</h3>
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label for="startYear">Starting Year</label>
+                        <input type="number" id="startYear" value="2026" min="2000" max="2100">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="initialPortfolio">Initial Portfolio Value (£)</label>
+                        <input type="number" id="initialPortfolio" value="100000" min="0" step="1000">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="numberOfYears">Number of Years</label>
+                        <input type="number" id="numberOfYears" value="30" min="1" max="100">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="withdrawalRate">Withdrawal Rate (%)</label>
+                        <input type="number" id="withdrawalRate" value="4" min="0" max="100" step="0.1">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="ceilingIncrease">Ceiling Increase (%)</label>
+                        <input type="number" id="ceilingIncrease" value="5" min="0" max="100" step="0.1">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="floorDecrease">Floor Decrease (%)</label>
+                        <input type="number" id="floorDecrease" value="2.5" min="0" max="100" step="0.1">
+                    </div>
+                </div>
+                            
+                <div id="yearOverridesContent" style="display: block;">
+                    <div style="margin-bottom: 15px; margin-top: 20px;">
+                        <label>Set specific values for individual years:</label>
+                        <div class="override-inputs">
+                            <div class="override-input-group">
+                                <label class="override-label">Year #</label>
+                                <input type="number" id="overrideYear" placeholder="0" min="1" step="1" class="override-input-small">
+                            </div>
+                            <div class="override-input-group">
+                                <label class="override-label">Portfolio £</label>
+                                <input type="number" id="overridePortfolio" placeholder="0" step="1000" class="override-input-medium">
+                            </div>
+                            <div class="override-input-group">
+                                <label class="override-label">Inflation %</label>
+                                <input type="number" id="overrideInflation" placeholder="0" step="0.1" class="override-input-narrow">
+                            </div>
+                            <button type="button" onclick="addYearOverride()" class="override-add-btn">Add Values</button>
+                        </div>
+                    </div>
+                    <div id="overridesList" class="overrides-list" style="display: none;"></div>
+                </div>
+            </div>
+
+            <!-- Portfolio Value and Withdrawal Chart -->
+            <div class="chart-section" id="chartContainer">
+                <canvas id="portfolioChart"></canvas>
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-primary" onclick="generateTable()">Generate Calculation Table</button>
+            <button class="btn-secondary" onclick="exportToCSV()">Export to CSV</button>
+            <button class="btn-danger" onclick="resetCalculator()">Reset</button>
+        </div>
+
+        <!-- BOTTOM SECTION: Results Table -->
+        <div class="bottom-section">
+            <div class="results-container" id="resultsContainer">
+                <h3>Yearly Withdrawal Calculations</h3>
+                <div class="table-wrapper">
+                    <table id="resultsTable">
+                        <thead>
+                            <tr>
+                                <th>Year</th>
+                                <th>Portfolio Value (£)</th>
+                                <th>Inflation Rate (%)</th>
+                                <th>Calculated Withdrawal (£)</th>
+                                <th>Ceiling (£)</th>
+                                <th>Floor (£)</th>
+                                <th>Final Withdrawal (£)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultsBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load data from localStorage
+        let calculationData = JSON.parse(localStorage.getItem('dynamicSpendingData')) || [];
+        let historicalRecords = JSON.parse(localStorage.getItem('dynamicSpendingHistory')) || [];
+        let yearOverrides = JSON.parse(localStorage.getItem('dynamicSpendingOverrides')) || {};
+
+        // Load data on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            if (calculationData.length > 0) {
+                displayStoredData();
+            }
+        });
+
+        function generateTable() {
+            const initialPortfolio = parseFloat(document.getElementById('initialPortfolio').value);
+            const withdrawalRate = parseFloat(document.getElementById('withdrawalRate').value);
+            const ceilingIncrease = parseFloat(document.getElementById('ceilingIncrease').value);
+            const floorDecrease = parseFloat(document.getElementById('floorDecrease').value);
+            const startYear = parseInt(document.getElementById('startYear').value);
+            const numberOfYears = parseInt(document.getElementById('numberOfYears').value);
+
+            // Save previous records before clearing
+            if (calculationData.length > 0) {
+                const recordDate = new Date().toISOString();
+                historicalRecords.push({
+                    date: recordDate,
+                    data: JSON.parse(JSON.stringify(calculationData))
+                });
+                localStorage.setItem('dynamicSpendingHistory', JSON.stringify(historicalRecords));
+            }
+
+            // Check for pre-set inflation rates saved per year
+            let inflationRates = [];
+            if (calculationData.length === numberOfYears) {
+                inflationRates = calculationData.map(row => row.inflationRate);
+            } else {
+                inflationRates = Array(numberOfYears).fill(3.0); // Default inflation is 3.0%
+            }
+
+            calculationData = [];
+            const tbody = document.getElementById('resultsBody');
+            tbody.innerHTML = '';
+
+            let previousWithdrawal = null;
+            let portfolioValue = initialPortfolio;
+
+            for (let i = 0; i < numberOfYears; i++) {
+                const year = startYear + i;
+                
+                // Check for year-specific overrides
+                if (yearOverrides[year]?.portfolio !== undefined) {
+                    portfolioValue = yearOverrides[year].portfolio;
+                }
+                
+                // Use inflation from previous records if available, otherwise 3.0
+                const inflationRate = yearOverrides[year]?.inflation !== undefined
+                    ? yearOverrides[year].inflation
+                    : (inflationRates[i] !== undefined ? inflationRates[i] : 3.0);
+                
+                const calculatedWithdrawal = portfolioValue * (withdrawalRate / 100);
+                
+                let ceiling, floor, finalWithdrawal;
+                
+                if (i === 0) {
+                    ceiling = calculatedWithdrawal;
+                    floor = calculatedWithdrawal;
+                    finalWithdrawal = calculatedWithdrawal;
+                } else {
+                    ceiling = previousWithdrawal * (1 + ceilingIncrease / 100);
+                    floor = previousWithdrawal * (1 - floorDecrease / 100);
+                    finalWithdrawal = Math.min(calculatedWithdrawal, ceiling);
+                    finalWithdrawal = Math.max(finalWithdrawal, floor);
+                }
+                
+                previousWithdrawal = finalWithdrawal;
+                
+                // Save each year's data in calculationData
+                calculationData.push({
+                    year,
+                    portfolioValue,
+                    inflationRate,
+                    calculatedWithdrawal,
+                    ceiling,
+                    floor,
+                    finalWithdrawal
+                });
+                
+                const row = tbody.insertRow();
+                
+                // Each inflation cell is editable, updates for that year only
+                const rowHtml = `
+                    <td>${year}</td>
+                    <td><input type="number" class="portfolio-input" value="${portfolioValue.toFixed(2)}" step="1000" onchange="updatePortfolioValue(${i}, this.value)"></td>
+                    <td><input type="number" class="inflation-input" value="${inflationRate.toFixed(1)}" step="0.1" 
+                         onchange="updateInflation(${i}, this.value)">
+                    </td>
+                    <td>£${calculatedWithdrawal.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                    <td>£${ceiling.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                    <td>£${floor.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                    <td class="highlight">£${finalWithdrawal.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                `;
+                row.innerHTML = rowHtml;
+                
+                // Apply inflation to reduce portfolio value for next year
+                portfolioValue = portfolioValue * (1 - (inflationRate / 100));
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('dynamicSpendingData', JSON.stringify(calculationData));
+            
+            document.getElementById('resultsContainer').style.display = 'block';
+            
+            // Render the chart after generating table
+            renderPortfolioChart();
+        }
+
+        // Called every time a user changes a single year's inflation value
+        function updateInflation(index, value) {
+            calculationData[index].inflationRate = parseFloat(value);
+            localStorage.setItem('dynamicSpendingData', JSON.stringify(calculationData));
+            generateTable(); // Recompute everything with updated inflation rates
+        }
+
+        // Called every time a user changes a single year's portfolio value
+        function updatePortfolioValue(index, value) {
+            calculationData[index].portfolioValue = parseFloat(value);
+            localStorage.setItem('dynamicSpendingData', JSON.stringify(calculationData));
+            generateTable(); // Recompute everything with updated portfolio values
+        }
+
+        // Toggle year overrides section visibility
+        function toggleYearOverrides() {
+            const content = document.getElementById('yearOverridesContent');
+            content.style.display = content.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Add year-specific override
+        function addYearOverride() {
+            const yearNum = parseInt(document.getElementById('overrideYear').value);
+            const inflation = parseFloat(document.getElementById('overrideInflation').value);
+            const portfolio = parseFloat(document.getElementById('overridePortfolio').value);
+            
+            if (!yearNum || yearNum < 1) {
+                alert('Please enter a valid year number');
+                return;
+            }
+            
+            yearOverrides[yearNum] = {};
+            if (!isNaN(inflation)) yearOverrides[yearNum].inflation = inflation;
+            if (!isNaN(portfolio)) yearOverrides[yearNum].portfolio = portfolio;
+            
+            localStorage.setItem('dynamicSpendingOverrides', JSON.stringify(yearOverrides));
+            
+            // Regenerate table if it exists
+            if (calculationData.length > 0) {
+                generateTable();
+            }
+            
+            // Display the overrides list
+            displayYearOverrides();
+            
+            // Clear inputs
+            document.getElementById('overrideYear').value = '';
+            document.getElementById('overrideInflation').value = '';
+            document.getElementById('overridePortfolio').value = '';
+        }
+
+        // Display year overrides list
+        function displayYearOverrides() {
+            const listDiv = document.getElementById('overridesList');
+            if (Object.keys(yearOverrides).length === 0) {
+                listDiv.style.display = 'none';
+                listDiv.innerHTML = '';
+                return;
+            }
+            
+            listDiv.style.display = 'block';
+            let html = '<div style="margin-top: 10px; margin-bottom: 5px;"><strong>Active Overrides:</strong></div>';
+            for (const [year, values] of Object.entries(yearOverrides).sort((a, b) => a[0] - b[0])) {
+                html += `<div class="override-item">`;
+                html += `<span>Year ${year}: `;
+                if (values.inflation !== undefined) html += `Inflation ${values.inflation}%`;
+                if (values.inflation !== undefined && values.portfolio !== undefined) html += ', ';
+                if (values.portfolio !== undefined) html += `Portfolio £${values.portfolio.toLocaleString()}`;
+                html += `</span>`;
+                html += `<button onclick="deleteYearOverride(${year})" class="override-delete-btn">Delete</button>`;
+                html += `</div>`;
+            }
+            listDiv.innerHTML = html;
+        }
+
+        // Delete year override
+        function deleteYearOverride(year) {
+            delete yearOverrides[year];
+            localStorage.setItem('dynamicSpendingOverrides', JSON.stringify(yearOverrides));
+            displayYearOverrides();
+            
+            // Regenerate table if it exists
+            if (calculationData.length > 0) {
+                generateTable();
+            }
+        }
+
+        function displayStoredData() {
+            const tbody = document.getElementById('resultsBody');
+            tbody.innerHTML = '';
+            
+            calculationData.forEach((row, i) => {
+                const tableRow = tbody.insertRow();
+                const rowHtml = `
+                    <td>${row.year}</td>
+                    <td><input type="number" class="portfolio-input" value="${row.portfolioValue.toFixed(2)}" step="1000" onchange="updatePortfolioValue(${i}, this.value)"></td>
+                    <td><input type="number" class="inflation-input" value="${row.inflationRate.toFixed(1)}" step="0.1" 
+                         onchange="updateInflation(${i}, this.value)">
+                    </td>
+                    <td>£${row.calculatedWithdrawal.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                    <td>£${row.ceiling.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                    <td>£${row.floor.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                    <td class="highlight">£${row.finalWithdrawal.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                `;
+                tableRow.innerHTML = rowHtml;
+            });
+            
+            document.getElementById('resultsContainer').style.display = 'block';
+            renderPortfolioChart();
+        }
+
+        function exportToCSV() {
+            if (calculationData.length === 0) {
+                alert('Please generate the table first!');
+                return;
+            }
+            
+            let csv = 'Year,Portfolio Value,Inflation Rate,Calculated Withdrawal,Ceiling,Floor,Final Withdrawal\n';
+            
+            calculationData.forEach(row => {
+                csv += `${row.year},${row.portfolioValue.toFixed(2)},${row.inflationRate.toFixed(1)},${row.calculatedWithdrawal.toFixed(2)},${row.ceiling.toFixed(2)},${row.floor.toFixed(2)},${row.finalWithdrawal.toFixed(2)}\n`;
+            });
+            
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'dynamic-spending-calculator.csv';
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        function resetCalculator() {
+            document.getElementById('initialPortfolio').value = 100000;
+            document.getElementById('withdrawalRate').value = 4;
+            document.getElementById('ceilingIncrease').value = 5;
+            document.getElementById('floorDecrease').value = 2.5;
+            document.getElementById('startYear').value = 2026;
+            document.getElementById('numberOfYears').value = 30;
+            document.getElementById('resultsContainer').style.display = 'none';
+            calculationData = [];
+            localStorage.removeItem('dynamicSpendingData');
+        }
+        
+        // Load and display year overrides on page load
+        displayYearOverrides();
+
+        // Render portfolio chart with responsive settings
+        function renderPortfolioChart() {
+            if (calculationData.length === 0) return;
+
+            // Prepare chart data
+            const labels = [];
+            const portfolioValues = [];
+
+            calculationData.forEach(row => {
+                labels.push(row.year);
+                portfolioValues.push(row.portfolioValue);
+            });
+            
+            // Destroy existing chart if it exists
+            const existingChart = Chart.getChart('portfolioChart');
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            
+            // Create chart with responsive configuration
+            const ctx = document.getElementById('portfolioChart').getContext('2d');
+            const chartConfig = {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Portfolio Value (£)',
+                            data: portfolioValues,
+                            borderColor: '#667eea',
+                            backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.3,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    aspectRatio: window.innerWidth < 768 ? 1.2 : 2, // Adjust aspect ratio for mobile
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                font: {
+                                    size: window.innerWidth < 480 ? 10 : 12
+                                }
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Portfolio Value Projection',
+                            font: {
+                                size: window.innerWidth < 480 ? 12 : 16
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '£' + value.toLocaleString();
+                                },
+                                font: {
+                                    size: window.innerWidth < 480 ? 9 : 11
+                                }
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: {
+                                    size: window.innerWidth < 480 ? 9 : 11
+                                },
+                                maxRotation: window.innerWidth < 480 ? 45 : 0,
+                                minRotation: window.innerWidth < 480 ? 45 : 0
+                            }
+                        }
+                    }
+                }
+            };
+            // Create the chart instance
+            new Chart(ctx, chartConfig);
+        }
+
+        // Re-render chart on window resize for better responsiveness
+        let resizeTimeout;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(function() {
+                if (calculationData.length > 0) {
+                    renderPortfolioChart();
+                }
+            }, 250);
+        });
+    </script>
+</body>
+</html>
